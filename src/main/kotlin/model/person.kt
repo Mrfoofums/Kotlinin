@@ -1,7 +1,6 @@
 package model
 
 
-import java.util.*
 class Model{
 
 fun main(args: Array<String>) {
@@ -19,10 +18,10 @@ fun largestPermutation(integerList: List<Int>, swaps:Int): List<Int>{
     var answerList:List<Int> = integerList.toMutableList()
     var curIndex = 0
     var swapsUsed = swaps
-    val sortedDescriptorList = getSortedListOfNumberDescriptor(integerList)
-    while(curIndex < swapsUsed && curIndex < integerList.size){
-        var swapIndex = sortedDescriptorList[curIndex].originIndex
-        if(swapIndex !=curIndex){
+    var sortedDescriptorList = getSortedListOfNumberDescriptor(integerList)
+    while(curIndex < swapsUsed && curIndex < integerList.size && curIndex < 70){
+        var swapIndex = sortedDescriptorList[curIndex].currentIndex
+        if(swapIndex != curIndex){
             answerList = swap(answerList, curIndex , swapIndex)
             curIndex+=1
         }
@@ -35,7 +34,7 @@ fun largestPermutation(integerList: List<Int>, swaps:Int): List<Int>{
     return answerList
 }
 
-    fun swap(integerList:List<Int>, ind1:Int, ind2:Int ):List<Int>{
+    fun swap(integerList:List<Int>, ind1:Int, ind2:Int ):MutableList<Int>{
         var swap1 = integerList[ind1]
         var swap2 = integerList[ind2]
 
@@ -46,18 +45,18 @@ fun largestPermutation(integerList: List<Int>, swaps:Int): List<Int>{
         return newList
     }
 
-    fun getSortedListOfNumberDescriptor(paramList:List<Int>):List<NumberDescriptor>{
+    fun getSortedListOfNumberDescriptor(paramList:List<Int>):MutableList<NumberDescriptor>{
         var answerList = mutableListOf<NumberDescriptor>()
-        (0 until paramList.size).mapTo(answerList) { NumberDescriptor(it, paramList[it]) }.sort()
+        (0 until paramList.size).mapTo(answerList) { NumberDescriptor(it, paramList[it]) }
+        answerList.sort()
         return answerList
     }
 }
-
-class NumberDescriptor(val originIndex:Int, val value:Int) : Comparable<NumberDescriptor> {
+//Need to track swaps in number map thingy
+class NumberDescriptor(var currentIndex:Int, val value:Int) : Comparable<NumberDescriptor> {
     override fun compareTo(other: NumberDescriptor): Int {
         return other.value.compareTo(this.value)
     }
-
 }
 
 
