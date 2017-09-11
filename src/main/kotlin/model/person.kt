@@ -7,28 +7,27 @@ fun main(args: Array<String>) {
     var inputs = readLine()
     var data = readLine()?.split(" ")?.map { s -> s.toInt() }
     var swaps = inputs?.split(" ")?.get(1)?.toInt()
-
-    if(data != null && swaps != null) {
-        val answer =largestPermutation(data, swaps)
+    var numNumers = inputs?.split(" ")?.get(0)?.toInt()
+    if(data != null && swaps != null && numNumers != null) {
+        val answer =largestPermutation(data, swaps, numNumers)
         answer.forEach { s -> print("$s ") }
     }
 }
 
-fun largestPermutation(integerList: List<Int>, swaps:Int): List<Int>{
-    var answerList:List<Int> = integerList.toMutableList()
+fun largestPermutation(paramList: List<Int>, swaps:Int, numNumbers:Int): List<Int>{
+    var answerList:List<Int> = paramList.toMutableList()
     var curIndex = 0
-    var swapsUsed = swaps
-    var sortedDescriptorList = getSortedListOfNumberDescriptor(integerList)
-    while(curIndex < swapsUsed && curIndex < integerList.size && curIndex < 70){
-        var swapIndex = sortedDescriptorList[curIndex].currentIndex
-        if(swapIndex != curIndex){
+    var valueMap = getSortedMapOfValues(paramList)
+    valueMap.forEach { item->
+        println("(Key)Integer: ${item.key} CurIndexInArray:${item.value}")
+    }
+
+    while(curIndex < swaps && curIndex < paramList.size){
+        var swapIndex = valueMap.get(numNumbers)
+        if(swapIndex != null)
             answerList = swap(answerList, curIndex , swapIndex)
-            curIndex+=1
-        }
-        else {
-            curIndex+=1
-            swapsUsed+=1
-        }
+        curIndex+=1
+        numNumbers-+1
     }
 
     return answerList
@@ -45,11 +44,12 @@ fun largestPermutation(integerList: List<Int>, swaps:Int): List<Int>{
         return newList
     }
 
-    fun getSortedListOfNumberDescriptor(paramList:List<Int>):MutableList<NumberDescriptor>{
-        var answerList = mutableListOf<NumberDescriptor>()
-        (0 until paramList.size).mapTo(answerList) { NumberDescriptor(it, paramList[it]) }
-        answerList.sort()
-        return answerList
+    fun getSortedMapOfValues(paramList:List<Int>):MutableMap<Int,Int>{
+        var numberMap = mutableMapOf<Int,Int>()
+        paramList.forEachIndexed { index, i ->
+            numberMap.put(i, index)
+        }
+        return numberMap
     }
 }
 //Need to track swaps in number map thingy
