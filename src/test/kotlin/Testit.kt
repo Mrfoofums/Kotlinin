@@ -14,13 +14,7 @@ class TestIt{
         assertEquals(expected2, testModel.largestPermutation(testList, 1, 2))
     }
 
-    @Test
-    fun testSwap(){
-        val model=Model()
-        assertEquals(listOf(1,2), model.swap(listOf(2,1), 0,1))
-        assertEquals(listOf(12,24,56,23), model.swap(listOf(56,24,12,24), 0,2))
-        assertEquals(listOf(12,24,56,23), model.swap(listOf(24,24,56,12), 0,3))
-    }
+
 
     @Test
     fun testAReallyBigOne(){

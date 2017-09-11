@@ -14,34 +14,44 @@ fun main(args: Array<String>) {
     }
 }
 
-fun largestPermutation(paramList: List<Int>, swaps:Int, numNumbers:Int): List<Int>{
+fun largestPermutation(paramList: List<Int>, swaps:Int, neededValueAtCurrentIndex:Int): List<Int>{
     var answerList:List<Int> = paramList.toMutableList()
-    var curIndex = 0
+    var currentIndexInOriginalArray = 0
     var valueMap = getSortedMapOfValues(paramList)
+    var currentNeededVal = neededValueAtCurrentIndex
+    while(currentIndexInOriginalArray < swaps && currentIndexInOriginalArray < paramList.size){
+        //Get Index of curValue, which starts at the first value
+        var currentValueAtCurIndex = paramList[currentIndexInOriginalArray]
+        if(currentValueAtCurIndex != currentNeededVal){
+            //we need to swap whatver is at the currentIndexInOriginalArray with what is at indexOfNextValue
+            valueMap = swap(valueMap , currentValueAtCurIndex , currentNeededVal)
+            //Increment stuff
+            currentIndexInOriginalArray+=1
+            currentNeededVal-=1
+        }
+        else{
+            currentIndexInOriginalArray+=1
+        }
+    }
     valueMap.forEach { item->
         println("(Key)Integer: ${item.key} CurIndexInArray:${item.value}")
     }
-
-    while(curIndex < swaps && curIndex < paramList.size){
-        var swapIndex = valueMap.get(numNumbers)
-        if(swapIndex != null)
-            answerList = swap(answerList, curIndex , swapIndex)
-        curIndex+=1
-        numNumbers-+1
-    }
-
+    //Need to somehow print the array in valueMap index order...
+    //TODO ^
     return answerList
 }
 
-    fun swap(integerList:List<Int>, ind1:Int, ind2:Int ):MutableList<Int>{
-        var swap1 = integerList[ind1]
-        var swap2 = integerList[ind2]
+    fun swap(numberMap:MutableMap<Int, Int>, currentValue:Int, neededValue:Int ):MutableMap<Int, Int>{
 
-        var newList = integerList.toMutableList()
-        newList[ind2] = swap1
-        newList[ind1] = swap2
-
-        return newList
+        var indexOfCurrentValue = numberMap.get(currentValue)
+        var indexOfNeededValue = numberMap.get(neededValue)
+        numberMap.remove(currentValue)
+        numberMap.remove(neededValue)
+        if(indexOfCurrentValue!= null && indexOfNeededValue!= null) {
+            numberMap.put(currentValue, indexOfNeededValue)
+            numberMap.put(neededValue, indexOfCurrentValue)
+        }
+        return numberMap
     }
 
     fun getSortedMapOfValues(paramList:List<Int>):MutableMap<Int,Int>{
